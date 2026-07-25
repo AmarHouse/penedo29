@@ -7,6 +7,14 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="apple-touch-icon" href="images/logo azul.png">
 
+    <!-- Preload LCP images -->
+    <link rel="preload" as="image" href="images/header.webp">
+    <link rel="preload" as="image" href="images/logo azul.webp">
+
+    <!-- Preconnect Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <!-- SEO -->
     <meta name="description" content="Penedo29 — Grupo de artistas e produtores culturais de Penedo, Itatiaia. Promovemos exposições de Fotografia e Arte desde 2015, preservando o Patrimônio Cultural da colônia finlandesa.">
     <meta name="keywords" content="Penedo29, arte, cultura, Penedo, Itatiaia, colônia finlandesa, fotografia, exposições, patrimônio cultural, Lei Aldir Blanc, produtora cultural">
@@ -44,10 +52,9 @@
     <meta name="article:published_time" content="2015-01-01T00:00:00+00:00">
     <meta name="article:modified_time" content="2026-07-24T00:00:00+00:00">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    <!-- Fonts (non-blocking) -->
+    <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap"></noscript>
 
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -907,11 +914,11 @@
     <main>
     <section class="hero" id="inicio">
         <div class="hero-bg">
-            <img src="images/header.webp" alt="Penedo29" width="1903" height="250">
+            <img src="images/header.webp" alt="Penedo29" width="1903" height="250" fetchpriority="high">
         </div>
         <div class="hero-content">
             <p class="hero-eyebrow">Arte · Cultura · Patrimônio</p>
-            <h1 class="hero-title"><img src="images/logo azul.webp" alt="Penedo29" width="758" height="171"></h1>
+            <h1 class="hero-title"><img src="images/logo azul.webp" alt="Penedo29" width="758" height="171" fetchpriority="high"></h1>
             <p class="hero-subtitle">Um grupo de artistas e produtores culturais dedicados a consolidar a produção artística contemporânea e manter vivo o Patrimônio Cultural de Penedo.</p>
             <div class="hero-line"></div>
         </div>
