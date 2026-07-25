@@ -47,8 +47,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
 
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -62,7 +61,7 @@
             --white: #ffffff;
             --cream: #f8f6f2;
             --text: #1a2a36;
-            --text-secondary: #425662;
+            --text-secondary: #344854;
             --text-faint: #8a96a0;
             --glass-bg: rgba(255, 255, 255, 0.65);
             --glass-bg-solid: rgba(255, 255, 255, 0.85);
@@ -140,9 +139,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(245, 242, 237, 0.5);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             transition: all 0.4s var(--ease-smooth);
         }
 
@@ -1170,8 +1166,8 @@
 </div>
 
 <script>
-    // Shuffle team cards
-    document.addEventListener('DOMContentLoaded', () => {
+    // Shuffle team cards (deferred)
+    const shuffleCards = () => {
         const grid = document.querySelector('.team-grid');
         if (!grid) return;
         const cards = [...grid.querySelectorAll('.team-card')];
@@ -1183,12 +1179,27 @@
             grid.appendChild(card);
             card.className = card.className.replace(/reveal-delay-\d+/g, `reveal-delay-${(i % 4) + 1}`);
         });
-    });
+    };
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(shuffleCards);
+    } else {
+        setTimeout(shuffleCards, 200);
+    }
 
-    // Nav scroll effect
+    // Combined scroll handler
     const nav = document.getElementById('nav');
+    const backTop = document.getElementById('backTop');
+    let ticking = false;
     window.addEventListener('scroll', () => {
-        nav.classList.toggle('scrolled', window.scrollY > 80);
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                const y = window.scrollY;
+                nav.classList.toggle('scrolled', y > 80);
+                backTop.classList.toggle('visible', y > 500);
+                ticking = false;
+            });
+            ticking = true;
+        }
     });
 
     // Scroll reveal
@@ -1198,31 +1209,27 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
     revealEls.forEach(el => observer.observe(el));
 
-    // Back to top
-    const backTop = document.getElementById('backTop');
-    window.addEventListener('scroll', () => {
-        backTop.classList.toggle('visible', window.scrollY > 500);
-    });
+    // Back to top click
     backTop.addEventListener('click', (e) => {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Lightbox
+    // Lightbox (event delegation)
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCaption = document.getElementById('lightboxCaption');
 
-    document.querySelectorAll('.gallery-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const img = card.querySelector('.card-img');
-            const title = card.querySelector('.card-body h3');
-            lightboxImg.src = img.src;
-            lightboxImg.alt = img.alt;
-            lightboxCaption.textContent = title ? title.textContent : '';
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
+    document.querySelector('.gallery-grid').addEventListener('click', (e) => {
+        const card = e.target.closest('.gallery-card');
+        if (!card) return;
+        const img = card.querySelector('.card-img');
+        const title = card.querySelector('.card-body h3');
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightboxCaption.textContent = title ? title.textContent : '';
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
     });
 
     function closeLightbox() {
